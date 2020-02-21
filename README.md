@@ -1,0 +1,3 @@
+# ccat
+
+Colored cat command
