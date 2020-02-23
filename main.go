@@ -4,11 +4,14 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
+	"github.com/jessevdk/go-flags"
+	"github.com/spf13/viper"
 )
 
 // Option represents application options
@@ -71,4 +74,42 @@ func (c CLI) Cat(opt Option, path string) (string, error) {
 	}
 
 	return contents, nil
+}
+
+func run(args []string) int {
+	var opt Option
+	args, err := flags.ParseArgs(&opt, args)
+	if err != nil || len(args) == 0 {
+		return 2
+	}
+
+	viper.SetConfigName("ccat")
+	viper.SetConfigType("json")
+	viper.AddConfigPath("$HOME/.config")
+
+	err = viper.ReadInConfig()
+	if err != nil {
+		fmt.Println(err)
+		return 1
+	}
+
+	var cli CLI
+	if err := viper.Unmarshal(&cli); err != nil {
+		fmt.Println(err)
+		return 1
+	}
+
+	for _, arg := range args {
+		contents, err := cli.Cat(opt, arg)
+		if err != nil {
+			return 1
+		}
+		fmt.Println(contents)
+	}
+
+	return 0
+}
+
+func main() {
+	os.Exit(run(os.Args[1:]))
 }
