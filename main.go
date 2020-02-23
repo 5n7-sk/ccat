@@ -9,3 +9,8 @@ type Option struct {
 type Config struct {
 	Theme string `json:"theme"`
 }
+
+// CLI represents this application itself
+type CLI struct {
+	Config Config
+}
