@@ -36,3 +36,7 @@
     />
   </a>
 </p>
+
+<p align="center">
+  <img src="./assets/images/demo.gif" width="640" alt="demo" />
+</p>
