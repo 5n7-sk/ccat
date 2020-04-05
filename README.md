@@ -40,3 +40,41 @@
 <p align="center">
   <img src="./assets/images/demo.gif" width="640" alt="demo" />
 </p>
+
+# ccat
+
+**ccat** is the colored `cat` command.
+
+## Install
+
+### Binary
+
+Get binary from [releases](https://github.com/skmatz/ccat/releases).
+
+### Source
+
+```sh
+go get github.com/skmatz/ccat
+```
+
+## Available Themes
+
+We can use various themes.
+
+- adap
+- dracula
+- emacs
+- github
+- monokai (default)
+- pygments
+- solarized-dark
+- solarized-light
+- vim
+- ... [more](https://github.com/alecthomas/chroma/tree/master/styles)
+
+Set your favorite theme in `~/.config/ccat.json`.  
+When you run `ccat` for the first time, the default configuration will be downloaded automatically.
+
+## Supported Languages
+
+Thanks to [alecthomas/chroma](https://github.com/alecthomas/chroma), almost all languages are supported.
