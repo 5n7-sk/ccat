@@ -72,6 +72,10 @@ We can use various themes.
 - vim
 - ... [more](https://github.com/alecthomas/chroma/tree/master/styles)
 
+<p align="center">
+  <img src="./assets/images/themes.gif" width="640" alt="themes" />
+</p>
+
 Set your favorite theme in `~/.config/ccat.json`.  
 When you run `ccat` for the first time, the default configuration will be downloaded automatically.
 
