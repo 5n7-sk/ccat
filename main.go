@@ -29,7 +29,8 @@ var usr = func() *user.User {
 
 // Option represents application options
 type Option struct {
-	Number bool `short:"n" long:"number" description:"Show contents with line numbers"`
+	Number   bool `short:"n" long:"number" description:"Show contents with line numbers"`
+	ShowTabs bool `short:"T" long:"show-tabs" description:"Show TAB characters as ^T"`
 }
 
 // Config represents the settings for this application
@@ -101,6 +102,10 @@ func (c CLI) Cat(opt Option, path string) (string, error) {
 		}
 
 		contents += fmt.Sprintf("%s\n", s)
+	}
+
+	if opt.ShowTabs {
+		contents = strings.Replace(contents, "\t", "^I", -1)
 	}
 
 	return contents, nil
