@@ -3,8 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
+	"os/user"
+	"path"
 	"strings"
 
 	"github.com/alecthomas/chroma/formatters"
@@ -13,6 +18,14 @@ import (
 	"github.com/jessevdk/go-flags"
 	"github.com/spf13/viper"
 )
+
+var usr = func() *user.User {
+	usr, err := user.Current()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return usr
+}()
 
 // Option represents application options
 type Option struct {
@@ -27,6 +40,23 @@ type Config struct {
 // CLI represents this application itself
 type CLI struct {
 	Config Config
+}
+
+func download(url string, path string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	out, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, resp.Body)
+	return err
 }
 
 // Cat formats file with syntax highlighting
@@ -79,7 +109,21 @@ func (c CLI) Cat(opt Option, path string) (string, error) {
 func run(args []string) int {
 	var opt Option
 	args, err := flags.ParseArgs(&opt, args)
-	if err != nil || len(args) == 0 {
+	if err != nil {
+		return 2
+	}
+
+	p := path.Join(usr.HomeDir, ".config/ccat.json")
+
+	if _, err = os.Stat(p); os.IsNotExist(err) {
+		url := "https://raw.githubusercontent.com/skmatz/ccat/master/ccat.json"
+		if err := download(url, p); err != nil {
+			fmt.Println(err)
+			return 1
+		}
+	}
+
+	if len(args) == 0 {
 		return 2
 	}
 
