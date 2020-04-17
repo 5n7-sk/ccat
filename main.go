@@ -27,11 +27,17 @@ var usr = func() *user.User {
 	return usr
 }()
 
+// These variables are set in build step
+var (
+	Version = "unset"
+)
+
 // Option represents application options
 type Option struct {
 	Number   bool `short:"n" long:"number" description:"Show contents with line numbers"`
 	ShowEnds bool `short:"E" long:"show-ends" description:"Show $ at end of lines"`
 	ShowTabs bool `short:"T" long:"show-tabs" description:"Show TAB characters as ^T"`
+	Version  bool `short:"v" long:"version" description:"Show ccat version"`
 }
 
 // Config represents the settings for this application
@@ -123,6 +129,11 @@ func run(args []string) int {
 	args, err := flags.ParseArgs(&opt, args)
 	if err != nil {
 		return 2
+	}
+
+	if opt.Version {
+		fmt.Printf("ccat v%s\n", Version)
+		return 0
 	}
 
 	p := path.Join(usr.HomeDir, ".config/ccat.json")
