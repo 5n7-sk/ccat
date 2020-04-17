@@ -30,6 +30,7 @@ var usr = func() *user.User {
 // Option represents application options
 type Option struct {
 	Number   bool `short:"n" long:"number" description:"Show contents with line numbers"`
+	ShowEnds bool `short:"E" long:"show-ends" description:"Show $ at end of lines"`
 	ShowTabs bool `short:"T" long:"show-tabs" description:"Show TAB characters as ^T"`
 }
 
@@ -101,7 +102,13 @@ func (c CLI) Cat(opt Option, path string) (string, error) {
 			contents += fmt.Sprintf("%6d  ", i+1)
 		}
 
-		contents += fmt.Sprintf("%s\n", s)
+		contents += s
+
+		if opt.ShowEnds {
+			contents += "$"
+		}
+
+		contents += "\n"
 	}
 
 	if opt.ShowTabs {
