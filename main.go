@@ -12,6 +12,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/alecthomas/chroma"
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
@@ -34,10 +35,11 @@ var (
 
 // Option represents application options
 type Option struct {
-	Number   bool `short:"n" long:"number" description:"Show contents with line numbers"`
-	ShowEnds bool `short:"E" long:"show-ends" description:"Show $ at end of lines"`
-	ShowTabs bool `short:"T" long:"show-tabs" description:"Show TAB characters as ^T"`
-	Version  bool `short:"v" long:"version" description:"Show ccat version"`
+	Number   bool   `short:"n" long:"number" description:"Show contents with line numbers"`
+	ShowEnds bool   `short:"E" long:"show-ends" description:"Show $ at end of lines"`
+	ShowTabs bool   `short:"T" long:"show-tabs" description:"Show TAB characters as ^T"`
+	Theme    string `short:"t" long:"theme" description:"Overwrite syntax highlighting theme"`
+	Version  bool   `short:"v" long:"version" description:"Show ccat version"`
 }
 
 // Config represents the settings for this application
@@ -74,7 +76,12 @@ func (c CLI) Cat(opt Option, path string) (string, error) {
 		lexer = lexers.Fallback
 	}
 
-	style := styles.Get(c.Config.Theme)
+	var style *chroma.Style
+	if opt.Theme != "" {
+		style = styles.Get(opt.Theme)
+	} else {
+		style = styles.Get((c.Config.Theme))
+	}
 	if style == nil {
 		style = styles.Fallback
 	}
