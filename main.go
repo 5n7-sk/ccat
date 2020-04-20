@@ -12,6 +12,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/acarl005/stripansi"
 	"github.com/alecthomas/chroma"
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
@@ -35,11 +36,12 @@ var (
 
 // Option represents application options
 type Option struct {
-	Number   bool   `short:"n" long:"number" description:"Show contents with line numbers"`
-	ShowEnds bool   `short:"E" long:"show-ends" description:"Show $ at end of lines"`
-	ShowTabs bool   `short:"T" long:"show-tabs" description:"Show TAB characters as ^T"`
-	Theme    string `short:"t" long:"theme" description:"Overwrite syntax highlighting theme"`
-	Version  bool   `short:"v" long:"version" description:"Show ccat version"`
+	Number         bool   `short:"n" long:"number" description:"Show contents with line numbers"`
+	NumberNonblank bool   `short:"b" long:"number-nonblank" description:"Show contents with nonempty line numbers"`
+	ShowEnds       bool   `short:"E" long:"show-ends" description:"Show $ at end of lines"`
+	ShowTabs       bool   `short:"T" long:"show-tabs" description:"Show TAB characters as ^T"`
+	Theme          string `short:"t" long:"theme" description:"Overwrite syntax highlighting theme"`
+	Version        bool   `short:"v" long:"version" description:"Show ccat version"`
 }
 
 // Config represents the settings for this application
@@ -109,10 +111,17 @@ func (c CLI) Cat(opt Option, path string) (string, error) {
 	s := w.String()
 	ss := strings.Split(s, "\n")
 
+	i := 0
 	contents := ""
-	for i, s := range ss {
-		if opt.Number {
+	for _, s := range ss {
+		if opt.NumberNonblank {
+			if stripansi.Strip(s) != "" {
+				contents += fmt.Sprintf("%6d  ", i+1)
+				i++
+			}
+		} else if opt.Number {
 			contents += fmt.Sprintf("%6d  ", i+1)
+			i++
 		}
 
 		contents += s
