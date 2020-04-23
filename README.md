@@ -57,6 +57,26 @@ Get binary from [releases](https://github.com/skmatz/ccat/releases).
 go get github.com/skmatz/ccat
 ```
 
+## Commands
+
+```console
+> ccat --help
+
+Usage:
+  ccat [OPTIONS]
+
+Application Options:
+  -n, --number           Show contents with line numbers
+  -b, --number-nonblank  Show contents with nonempty line numbers
+  -E, --show-ends        Show $ at end of lines
+  -T, --show-tabs        Show TAB characters as ^T
+  -t, --theme=           Overwrite syntax highlighting theme
+  -v, --version          Show ccat version
+
+Help Options:
+  -h, --help             Show this help message
+```
+
 ## Available Themes
 
 We can use various themes.
