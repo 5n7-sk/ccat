@@ -49,7 +49,12 @@
 
 ### Binary
 
-Get binary from [releases](https://github.com/skmatz/ccat/releases).
+Get binary from [releases](https://github.com/skmatz/ccat/releases).  
+If you already have [jq](https://github.com/stedolan/jq) and [fzf](https://github.com/junegunn/fzf) or [peco](https://github.com/peco/peco), you can download binary by running the following command.
+
+```sh
+curl -Ls https://api.github.com/repos/skmatz/ccat/releases/latest | jq -r ".assets[].browser_download_url" | fzf | wget -i -
+```
 
 ### Source
 
